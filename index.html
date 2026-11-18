@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sneakverse.online – Order & Address Form</title>
+<style>
+  :root{--bg:#f4f5f8;--card:#fff;--ink:#14171f;--muted:#667085;--line:#d9dde6;--brand:#111;--accent:#ff4d2e;--err:#d92d20;--ok:#12805c;--wa:#1fa855}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:20px 14px}
+  .wrap{max-width:660px;margin:0 auto}
+  .brand{background:var(--brand);color:#fff;border-radius:16px 16px 0 0;padding:22px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .logo{font-size:1.5rem;font-weight:800;letter-spacing:-.5px}
+  .logo b{color:var(--accent)}
+  .tag{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:#bbb}
+  .card{background:var(--card);border-radius:0 0 16px 16px;box-shadow:0 6px 30px rgba(20,30,60,.08);padding:28px}
+  h1{margin:0 0 4px;font-size:1.3rem}
+  p.sub{margin:0 0 22px;color:var(--muted);font-size:.93rem}
+  h3{margin:26px 0 12px;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:6px}
+  h3:first-of-type{margin-top:0}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .full{grid-column:1/-1}
+  label{display:block;font-weight:600;font-size:.9rem;margin-bottom:6px}
+  .req{color:var(--err)}
+  input,select{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--ink)}
+  input:focus,select:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(0,0,0,.08)}
+  input[readonly]{background:#eef0f5;color:var(--muted)}
+  .invalid input,.invalid select,.invalid .drop{border-color:var(--err)}
+  .msg{display:none;color:var(--err);font-size:.8rem;margin-top:4px}
+  .invalid .msg{display:block}
+  .hint{font-size:.78rem;color:var(--muted);margin-top:4px}
+  .phone{display:flex}
+  .phone span{padding:11px 12px;border:1.5px solid var(--line);border-right:0;border-radius:10px 0 0 10px;background:#eef0f5;color:var(--muted)}
+  .phone input{border-radius:0 10px 10px 0}
+  .drop{border:2px dashed var(--line);border-radius:12px;padding:18px;text-align:center;color:var(--muted);cursor:pointer;background:#fafbfd}
+  .drop:hover{border-color:var(--brand)}
+  .drop input{display:none}
+  #preview{display:none;position:relative;margin-top:10px;width:140px}
+  #preview img{width:140px;height:140px;object-fit:cover;border-radius:12px;border:1.5px solid var(--line);display:block}
+  #rm{position:absolute;top:-8px;right:-8px;width:26px;height:26px;border-radius:50%;padding:0;background:var(--err);color:#fff;font-size:15px;line-height:1}
+  .actions{display:flex;gap:12px;margin-top:26px}
+  button,a.btn{font:inherit;font-weight:600;padding:12px 20px;border-radius:10px;border:0;cursor:pointer;text-decoration:none;text-align:center;display:inline-block}
+  .primary{background:var(--brand);color:#fff;flex:1}
+  .primary:hover{background:#2b2f3a}
+  .ghost{background:#eef0f5;color:var(--ink)}
+  .wa{background:var(--wa);color:#fff}
+  .wa:hover{background:#17893f}
+  #result{display:none;margin-top:24px;border:1.5px solid var(--ok);background:#effaf5;border-radius:12px;padding:16px}
+  #result h2{margin:0 0 8px;font-size:1.05rem;color:var(--ok)}
+  #result pre{margin:0 0 12px;white-space:pre-wrap;font:inherit}
+  #result .row{display:flex;gap:10px;flex-wrap:wrap}
+  #result .note{font-size:.82rem;color:var(--muted);margin:12px 0 0}
+  @media(max-width:540px){.grid{grid-template-columns:1fr}.card{padding:20px}.brand{padding:18px 20px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <div class="logo">sneakverse<b>.online</b></div>
+    <div class="tag">Shoe Store</div>
+  </div>
+  <div class="card">
+    <h1>Order &amp; Delivery Details</h1>
+    <p class="sub">Fill in your shoe details and delivery address. Fields marked <span class="req">*</span> are required.</p>
+
+    <form id="f" novalidate>
+      <h3>Shoe details</h3>
+      <div class="grid">
+        <div class="full field">
+          <label for="shoe">Shoe name / model</label>
+          <input id="shoe" placeholder="e.g. Nike Air Force 1 White">
+          <div class="msg"></div>
+        </div>
+        <div class="field">
+          <label for="size">Size (UK / India) <span class="req">*</span></label>
+          <select id="size"><option value="">Select size</option></select>
+          <div class="msg">Please select a size.</div>
+        </div>
+        <div class="field">
+          <label for="qty">Quantity</label>
+          <select id="qty"></select>
+          <div class="msg"></div>
+        </div>
+        <div class="full field">
+          <label>Shoe photo (optional)</label>
+          <label class="drop" for="img">
+            <input id="img" type="file" accept="image/*">
+            <span id="dropText">📷 Tap to add a photo of the shoe you want</span>
+          </label>
+          <div id="preview"><img id="pimg" alt="Selected shoe photo"><button type="button" id="rm" aria-label="Remove photo">×</button></div>
+          <div class="hint">JPG / PNG, up to 5 MB.</div>
+          <div class="msg" id="imgErr"></div>
+        </div>
+      </div>
+
+      <h3>Delivery address</h3>
+      <div class="grid">
+        <div class="full field">
+          <label for="name">Name <span class="req">*</span></label>
+          <input id="name" autocomplete="name" placeholder="Full name">
+          <div class="msg">Enter a valid name (letters only).</div>
+        </div>
+        <div class="full field">
+          <label for="house">House Name <span class="req">*</span></label>
+          <input id="house" autocomplete="address-line1" placeholder="House name / number">
+          <div class="msg">Enter the house name.</div>
+        </div>
+        <div class="full field">
+          <label for="street">Street / Road</label>
+          <input id="street" autocomplete="address-line2" placeholder="Street or road">
+          <div class="msg"></div>
+        </div>
+        <div class="field">
+          <label for="area">Area / Place <span class="req">*</span></label>
+          <input id="area" placeholder="Area or place">
+          <div class="msg">Enter your area / place.</div>
+        </div>
+        <div class="field">
+          <label for="po">Post Office <span class="req">*</span></label>
+          <input id="po" placeholder="Post office">
+          <div class="msg">Enter the post office.</div>
+        </div>
+        <div class="field">
+          <label for="pin">PIN Code <span class="req">*</span></label>
+          <input id="pin" inputmode="numeric" maxlength="6" autocomplete="postal-code" placeholder="6-digit PIN">
+          <div class="msg">Enter a valid 6-digit PIN code.</div>
+        </div>
+        <div class="field">
+          <label for="district">District <span class="req">*</span></label>
+          <input id="district" placeholder="District">
+          <div class="msg">Enter the district.</div>
+        </div>
+        <div class="field">
+          <label for="state">State <span class="req">*</span></label>
+          <select id="state"><option value="">Select state</option></select>
+          <div class="msg">Please select a state.</div>
+        </div>
+        <div class="field">
+          <label for="country">Country</label>
+          <input id="country" value="India" readonly>
+          <div class="msg"></div>
+        </div>
+        <div class="full field">
+          <label for="mobile">Mobile Number <span class="req">*</span></label>
+          <div class="phone"><span>+91</span><input id="mobile" inputmode="numeric" maxlength="10" autocomplete="tel-national" placeholder="10-digit mobile number"></div>
+          <div class="msg">Enter a valid 10-digit mobile number (starts with 6–9).</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="primary">Continue</button>
+        <button type="button" class="ghost" id="reset">Clear</button>
+      </div>
+    </form>
+
+    <div id="result" role="status">
+      <h2>Order details ready</h2>
+      <pre id="out"></pre>
+      <div class="row">
+        <button type="button" id="shareBtn" class="wa" style="display:none">Send with photo</button>
+        <a id="waBtn" class="btn wa" href="#" target="_blank" rel="noopener">Send on WhatsApp</a>
+        <button type="button" class="ghost" id="copy">Copy details</button>
+      </div>
+      <p class="note" id="imgNote"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ====== STORE SETTINGS ======
+const WHATSAPP_NUMBER = "916235074502";
+// ============================
+
+const STATES=["Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal"];
+const $=id=>document.getElementById(id);
+STATES.forEach(s=>{const o=document.createElement("option");o.value=o.textContent=s;$("state").appendChild(o)});
+for(let s=3;s<=13;s++){const o=document.createElement("option");o.value=String(s);o.textContent="UK/India "+s;$("size").appendChild(o)}
+for(let q=1;q<=5;q++){const o=document.createElement("option");o.value=o.textContent=String(q);$("qty").appendChild(o)}
+
+$("name").addEventListener("input",e=>e.target.value=e.target.value.replace(/[^\p{L}\s.'-]/gu,""));
+$("pin").addEventListener("input",e=>e.target.value=e.target.value.replace(/\D/g,""));
+$("mobile").addEventListener("input",e=>e.target.value=e.target.value.replace(/\D/g,""));
+
+// image
+let imgFile=null;
+function clearImage(){$("img").value="";$("preview").style.display="none";$("pimg").removeAttribute("src");$("dropText").textContent="📷 Tap to add a photo of the shoe you want";imgFile=null;}
+$("img").addEventListener("change",e=>{
+  const f=e.target.files[0];
+  const box=$("img").closest(".field");
+  box.classList.remove("invalid");
+  if(!f){clearImage();return}
+  if(!f.type.startsWith("image/")){$("imgErr").textContent="Please choose an image file.";box.classList.add("invalid");clearImage();return}
+  if(f.size>5*1024*1024){$("imgErr").textContent="Image is larger than 5 MB.";box.classList.add("invalid");clearImage();return}
+  imgFile=f;
+  const r=new FileReader();
+  r.onload=()=>{$("pimg").src=r.result;$("preview").style.display="block";$("dropText").textContent="✅ "+f.name+" (tap to change)"};
+  r.readAsDataURL(f);
+});
+$("rm").addEventListener("click",clearImage);
+
+const rules={
+  size:v=>/^(3|4|5|6|7|8|9|10|11|12|13)$/.test(v),
+  name:v=>/^[\p{L}][\p{L}\s.'-]*$/u.test(v.trim()),
+  house:v=>v.trim().length>0,
+  area:v=>v.trim().length>0,
+  po:v=>v.trim().length>0,
+  pin:v=>/^[1-9]\d{5}$/.test(v),
+  district:v=>v.trim().length>0,
+  state:v=>STATES.includes(v),
+  mobile:v=>/^[6-9]\d{9}$/.test(v)
+};
+function check(id){const ok=rules[id]($(id).value);$(id).closest(".field").classList.toggle("invalid",!ok);return ok}
+Object.keys(rules).forEach(id=>{
+  $(id).addEventListener("blur",()=>check(id));
+  $(id).addEventListener("input",()=>{if($(id).closest(".field").classList.contains("invalid"))check(id)});
+});
+
+let lastText="";
+const canShareFile=()=>imgFile&&navigator.canShare&&navigator.canShare({files:[imgFile]});
+
+$("f").addEventListener("submit",e=>{
+  e.preventDefault();
+  const results=Object.keys(rules).map(check);
+  if(results.includes(false)){
+    const bad=document.querySelector(".invalid input,.invalid select");
+    if(bad)bad.focus();
+    $("result").style.display="none";return;
+  }
+  const v=id=>$(id).value.trim();
+  const lines=[
+    "🛍️ *New order – sneakverse.online*","",
+    "*Shoe:* "+(v("shoe")||"(see photo)"),
+    "*Size:* UK/India "+v("size"),
+    "*Quantity:* "+v("qty"),
+    imgFile?"*Photo:* sent with this message":"",
+    "",
+    "*Delivery address*",
+    v("name"),v("house"),v("street"),v("area"),
+    "PO "+v("po")+", "+v("district"),
+    v("state")+" - "+v("pin"),
+    "India",
+    "Mobile: +91 "+v("mobile")
+  ].filter((x,i,a)=>!(x===""&&(i===0||a[i-1]==="")));
+  lastText=lines.join("\n");
+  $("out").textContent=lastText.replace(/\*/g,"");
+  $("waBtn").href="https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(lastText);
+  const share=canShareFile();
+  $("shareBtn").style.display=share?"inline-block":"none";
+  $("waBtn").textContent=share?"Send text only":"Send on WhatsApp";
+  $("imgNote").textContent=imgFile
+    ? (share
+        ? "Tap “Send with photo”, choose WhatsApp, then pick "+"sneakverse"+" (+91 "+WHATSAPP_NUMBER.slice(2)+") to send the photo with the details."
+        : "WhatsApp can't attach photos automatically here. After the chat opens, tap the 📎 button and send your photo.")
+    : "";
+  $("result").style.display="block";
+  $("result").scrollIntoView({behavior:"smooth",block:"nearest"});
+});
+
+$("shareBtn").addEventListener("click",async()=>{
+  try{
+    await navigator.share({files:[imgFile],text:lastText.replace(/\*/g,"")});
+  }catch(err){
+    if(err&&err.name==="AbortError")return;
+    window.open($("waBtn").href,"_blank");
+  }
+});
+
+$("reset").addEventListener("click",()=>{
+  $("f").reset();clearImage();
+  document.querySelectorAll(".invalid").forEach(x=>x.classList.remove("invalid"));
+  $("result").style.display="none";
+});
+$("copy").addEventListener("click",async()=>{
+  try{await navigator.clipboard.writeText(lastText.replace(/\*/g,""));$("copy").textContent="Copied!"}
+  catch(_){$("copy").textContent="Select text & copy"}
+  setTimeout(()=>$("copy").textContent="Copy details",1800);
+});
+</script>
+</body>
+</html>
