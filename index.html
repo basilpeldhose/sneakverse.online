@@ -11,7 +11,7 @@
   .wrap{max-width:660px;margin:0 auto}
   .brand{background:var(--brand);color:#fff;border-radius:16px 16px 0 0;padding:22px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
   .logo{font-size:1.5rem;font-weight:800;letter-spacing:-.5px}
-  .logo b{color:var(--accent)}
+  .logo b{color:#2f80ed}
   .tag{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:#bbb}
   .card{background:var(--card);border-radius:0 0 16px 16px;box-shadow:0 6px 30px rgba(20,30,60,.08);padding:28px}
   h1{margin:0 0 4px;font-size:1.3rem}
@@ -157,7 +157,7 @@
       <h2>Order details ready</h2>
       <pre id="out"></pre>
       <div class="row">
-        <button type="button" id="shareBtn" class="wa" style="display:none">Send with photo</button>
+        <button type="button" id="shareBtn" class="wa" style="display:none">Send order + photo</button>
         <a id="waBtn" class="btn wa" href="#" target="_blank" rel="noopener">Send on WhatsApp</a>
         <button type="button" class="ghost" id="copy">Copy details</button>
       </div>
@@ -216,7 +216,7 @@ Object.keys(rules).forEach(id=>{
 });
 
 let lastText="";
-const canShareFile=()=>imgFile&&navigator.canShare&&navigator.canShare({files:[imgFile]});
+const canShareFile=()=>Boolean(imgFile);
 
 $("f").addEventListener("submit",e=>{
   e.preventDefault();
@@ -248,21 +248,16 @@ $("f").addEventListener("submit",e=>{
   $("shareBtn").style.display=share?"inline-block":"none";
   $("waBtn").textContent=share?"Send text only":"Send on WhatsApp";
   $("imgNote").textContent=imgFile
-    ? (share
-        ? "Tap “Send with photo”, choose WhatsApp, then pick "+"sneakverse"+" (+91 "+WHATSAPP_NUMBER.slice(2)+") to send the photo with the details."
-        : "WhatsApp can't attach photos automatically here. After the chat opens, tap the 📎 button and send your photo.")
+    ? "The WhatsApp chat for +91 "+WHATSAPP_NUMBER.slice(2)+" will open with your order text. Attach the selected shoe photo in WhatsApp before sending."
     : "";
   $("result").style.display="block";
   $("result").scrollIntoView({behavior:"smooth",block:"nearest"});
 });
 
-$("shareBtn").addEventListener("click",async()=>{
-  try{
-    await navigator.share({files:[imgFile],text:lastText.replace(/\*/g,"")});
-  }catch(err){
-    if(err&&err.name==="AbortError")return;
-    window.open($("waBtn").href,"_blank");
-  }
+$("shareBtn").addEventListener("click",()=>{
+  // Open the fixed WhatsApp chat with the order text prefilled.
+  // Browsers do not allow a webpage to silently attach a local image.
+  window.open($("waBtn").href,"_blank","noopener");
 });
 
 $("reset").addEventListener("click",()=>{
