@@ -81,6 +81,8 @@
           <select id="qty"></select>
           <div class="msg"></div>
         </div>
+        <!-- //Adding image deleted
+        
         <div class="full field">
           <label>Shoe photo (optional)</label>
           <label class="drop" for="img">
@@ -92,7 +94,7 @@
           <div class="msg" id="imgErr"></div>
         </div>
       </div>
-
+      -->
       <h3>Delivery address</h3>
       <div class="grid">
         <div class="full field">
@@ -232,8 +234,7 @@ $("f").addEventListener("submit",e=>{
     "*Shoe:* "+(v("shoe")||"(see photo)"),
     "*Size:* UK/India "+v("size"),
     "*Quantity:* "+v("qty"),
-    imgFile?"*Photo:* sent with this message":"",
-    "",
+  
     "*Delivery address*",
     v("name"),v("house"),v("street"),v("area"),
     "PO "+v("po")+", "+v("district"),
